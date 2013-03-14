@@ -77,24 +77,40 @@ def summarize(distribution, raw_sentences, processed_sentences, N):
 
     while length < N and len(processed_sentences) > 0:
 
+        # find highest probability word and sentences containing that word
+        word = find_best_word(distribution)
+        candidates = [sentence for sentence in processed_sentences if word in sentence]
+
         # get sentence with highest average word probability and its original form
-        sentence = weight_sentences(distribution, processed_sentences)
+        sentence = weight_sentences(distribution, candidates)
         original = raw_sentences[processed_sentences.index(sentence)]
-        original = clean(original)
+        cleaned = clean(original)
 
         # summary length should not exceed N
-        if len(original.split()) + length > N: break
+        if len(cleaned.split()) + length > N: break
 
         # remove sentences from consideration and add to summary
         processed_sentences.remove(sentence)
         raw_sentences.remove(original)
-        length += len(original.split())
-        summary.append(original)
+        length += len(cleaned.split())
+        summary.append(cleaned)
 
         # downweight words
         for word in sentence: distribution[word] = distribution[word]**2
 
     return summary
+
+def find_best_word(distribution):
+    """
+    """
+    best_word, max_prob = '', 0
+
+    for word in distribution:
+        if distribution[word] > max_prob:
+            max_prob = distribution[word]
+            best_word = word
+
+    return best_word
 
 def weight_sentences(distribution, sentences):
     """
