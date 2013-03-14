@@ -102,7 +102,14 @@ def summarize(distribution, raw_sentences, processed_sentences, N):
 
 def find_best_word(distribution):
     """
+    Returns the highest probability word given the distribution.
+
+    @param distribution -- probability distribution over words
+    
+    @return best_word -- word with highest probability
+
     """
+
     best_word, max_prob = '', 0
 
     for word in distribution:
