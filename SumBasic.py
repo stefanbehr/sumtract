@@ -75,7 +75,7 @@ def summarize(distribution, raw_sentences, processed_sentences, N):
     summary = []
     length = 0
 
-    while length < N and len(processed_sentences) > 0:
+    while len(processed_sentences) > 0:
 
         # find highest probability word and sentences containing that word
         word = find_best_word(distribution)
@@ -86,7 +86,7 @@ def summarize(distribution, raw_sentences, processed_sentences, N):
         original = raw_sentences[processed_sentences.index(sentence)]
 
         # summary length should not exceed N
-        if len(original.split()) + length >= N: break
+        if len(original.split()) + length > N: return summary
 
         # remove sentences from consideration and add to summary
         processed_sentences.remove(sentence)
