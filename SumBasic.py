@@ -86,7 +86,7 @@ def summarize(distribution, raw_sentences, processed_sentences, N):
         original = raw_sentences[processed_sentences.index(sentence)]
 
         # summary length should not exceed N
-        if len(original.split()) + length > N: break
+        if len(original.split()) + length >= N: break
 
         # remove sentences from consideration and add to summary
         processed_sentences.remove(sentence)
