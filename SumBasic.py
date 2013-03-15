@@ -46,7 +46,7 @@ def get_sentences(filename):
         # store sentences if not empty
         if sentence:
             processed_sentences.append(sentence)
-            raw_sentences.append(line)
+            raw_sentences.append(clean(line))
 
         # update frequency
         for word in sentence:
@@ -84,16 +84,15 @@ def summarize(distribution, raw_sentences, processed_sentences, N):
         # get sentence with highest average word probability and its original form
         sentence = weight_sentences(distribution, candidates)
         original = raw_sentences[processed_sentences.index(sentence)]
-        cleaned = clean(original)
 
         # summary length should not exceed N
-        if len(cleaned.split()) + length > N: break
+        if len(original.split()) + length > N: break
 
         # remove sentences from consideration and add to summary
         processed_sentences.remove(sentence)
         raw_sentences.remove(original)
-        length += len(cleaned.split())
-        summary.append(cleaned)
+        length += len(original.split())
+        summary.append(original)
 
         # downweight words
         for word in sentence: distribution[word] = distribution[word]**2
