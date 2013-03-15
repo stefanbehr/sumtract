@@ -21,7 +21,7 @@ def get_sentences(filename):
     @param filename -- name of file containing sentences
 
     @return distribution -- probability distribution of words
-    @return raw_sentences -- list of raw sentences
+    @return clean_sentences -- list of clean sentences
     @return processed_sentences -- list of processed sentences
 
     """
@@ -30,7 +30,7 @@ def get_sentences(filename):
     stemmer = nltk.stem.PorterStemmer()
     tokenize = nltk.word_tokenize
 
-    raw_sentences, processed_sentences = [], []
+    clean_sentences, processed_sentences = [], []
     distribution = defaultdict(int)
     total = 0
 
@@ -46,7 +46,7 @@ def get_sentences(filename):
         # store sentences if not empty
         if sentence:
             processed_sentences.append(sentence)
-            raw_sentences.append(clean(line))
+            clean_sentences.append(clean(line))
 
         # update frequency
         for word in sentence:
@@ -56,88 +56,73 @@ def get_sentences(filename):
     # convert frequency distribution to probability distribution
     for word in distribution: distribution[word] = distribution[word]/total
 
-    return distribution, raw_sentences, processed_sentences
+    return distribution, clean_sentences, processed_sentences
 
-def summarize(distribution, raw_sentences, processed_sentences, N):
+def summarize(distribution, clean_sentences, processed_sentences, N):
     """
-    Runs SumBasic algorithm on sentences and returns summary as a list 
-    of raw sentences.
+    Recursively runs SumBasic algorithm on sentences.
 
     @param distribution -- probability distribution over words
-    @param raw_sentences -- list of raw sentences
+    @param clean_sentences -- list of clean sentences
     @param processed_sentences -- list of processed sentences
     @param N -- maximum length of summary in words
 
-    @return summary -- summary as a list of cleaned sentences
+    @return -- summary pieces as strings
 
     """
 
-    summary = []
-    length = 0
+    if N == 0 or N == 1 or not clean_sentences: return ''
 
-    while len(processed_sentences) > 0:
+    # sort words by probability
+    words = sorted(distribution, key=distribution.get, reverse=True)
 
-        # find highest probability word and sentences containing that word
-        word = find_best_word(distribution)
+    for word in words:
+
+        # get candidate sentences containing word
         candidates = [sentence for sentence in processed_sentences if word in sentence]
+        if not candidates: continue
+        
+        # sort candidates by average probability
+        candidates = sentence_averages(distribution, candidates)
 
-        # get sentence with highest average word probability and its original form
-        sentence = weight_sentences(distribution, candidates)
-        original = raw_sentences[processed_sentences.index(sentence)]
+        for candidate in candidates:
+            original = clean_sentences[processed_sentences.index(candidate)]
+            processed_sentences.remove(candidate)
+            clean_sentences.remove(original)
 
-        # summary length should not exceed N
-        if len(original.split()) + length > N: return summary
+            # if sentence fits, add sentence to summary
+            if len(original.split()) <= N:    
+        
+                # update distribution
+                for word in candidate: distribution[word] = distribution[word]**2
 
-        # remove sentences from consideration and add to summary
-        processed_sentences.remove(sentence)
-        raw_sentences.remove(original)
-        length += len(original.split())
-        summary.append(original)
+                return original + ' ' + summarize(distribution, \
+                        clean_sentences, processed_sentences, (N - len(original.split())))
+       
+    return ''
 
-        # downweight words
-        for word in sentence: distribution[word] = distribution[word]**2
 
-    return summary
-
-def find_best_word(distribution):
-    """
-    Returns the highest probability word given the distribution.
-
-    @param distribution -- probability distribution over words
-    
-    @return best_word -- word with highest probability
-
-    """
-
-    best_word, max_prob = '', 0
-
-    for word in distribution:
-        if distribution[word] > max_prob:
-            max_prob = distribution[word]
-            best_word = word
-
-    return best_word
-
-def weight_sentences(distribution, sentences):
+def sentence_averages(distribution, sentences):
     """
     Finds average word probability per sentence and returns highest.
 
     @param distribution -- probability distribution over words
     @param sentences -- list of sentences
 
-    @return best_sentence -- sentence with highest average word probability
+    @return averages -- sentences sorted by average probability
 
     """
     
-    best_sentence, best_average = '', 0
+    scores = defaultdict(float)
+    index = 0
 
     for sentence in sentences:
-        average = sum([distribution[word] for word in sentence])/len(sentence)
-        if average > best_average:
-            best_average = average
-            best_sentence = sentence
+        scores[index] = sum([distribution[word] for word in sentence])/len(sentence)
+        index += 1
 
-    return best_sentence
+    averages = [sentences[index] for index in sorted(scores, key=scores.get, reverse=True)]
+
+    return averages
 
 def clean(sentence):
     """
@@ -182,10 +167,8 @@ def main():
         sys.stderr.write('N must be greater than 0. No output produced.')
         sys.exit()
     
-    distribution, raw_sentences, processed_sentences = get_sentences(sys.argv[1])
-    summary = summarize(distribution, raw_sentences, processed_sentences, N)
-    for s in summary: sys.stdout.write(s + ' ')
-    sys.stdout.write('\n')
+    distribution, clean_sentences, processed_sentences = get_sentences(sys.argv[1])
+    print summarize(distribution, clean_sentences, processed_sentences, N)
 
 if __name__=='__main__':
     main()
