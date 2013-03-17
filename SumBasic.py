@@ -71,7 +71,7 @@ def summarize(distribution, clean_sentences, processed_sentences, N):
 
     """
 
-    if N == 0 or N == 1 or not clean_sentences: return ''
+    if N == 0 or N == 1: return ''
 
     # sort words by probability
     words = sorted(distribution, key=distribution.get, reverse=True)
@@ -80,7 +80,6 @@ def summarize(distribution, clean_sentences, processed_sentences, N):
 
         # get candidate sentences containing word
         candidates = [sentence for sentence in processed_sentences if word in sentence]
-        if not candidates: continue
         
         # sort candidates by average probability
         candidates = sentence_averages(distribution, candidates)
