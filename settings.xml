@@ -1,0 +1,23 @@
+<ROUGE_EVAL version='1.5.5'>
+<EVAL ID='1'>
+<MODEL-ROOT> directory_to_human_summaries </MODEL-ROOT>
+<PEER-ROOT> directory_to_system_summary </PEER-ROOT>
+<INPUT-FORMAT TYPE='SEE'> </INPUT-FORMAT>
+<PEERS>
+<P ID='1'>our_summary.html</P>
+</PEERS>
+<MODELS>
+<M ID='al'>aljazeera.com.html</M>
+<M ID='forex'>forexblog.oanda.com.html</M>
+<M ID='fs'>fsfsmedia.net.html</M>
+<M ID='key'>keystonepublicaffairs.com.html</M>
+<M ID='ks'>ksfsmedia.net.html</M>
+<M ID='learn'>learnvest.com.html</M>
+<M ID='mich'>michaelekelley.com.html</M>
+<M ID='pat'>patriotpost.us.html</M>
+<M ID='tri'>trianglecoalition.org.html</M>
+<M ID='us'>useconomy.about.com.html</M>
+<M ID='wash'>washingtonpost.com.html</M>
+</MODELS>
+</EVAL>
+</ROUGE_EVAL>
