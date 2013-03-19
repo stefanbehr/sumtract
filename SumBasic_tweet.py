@@ -383,7 +383,7 @@ def main():
     
     args = argparse.ArgumentParser()
     args.add_argument('sentences', help='file of line-separated sentences to summarize')
-    args.add_argument('N', help='number of words in summary', type=int)
+    args.add_argument('N', help='number of characters in summary', type=int)
     args.parse_args()
     
     N = int(sys.argv[2])
