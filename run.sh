@@ -23,8 +23,8 @@ python2.7 SumBasic.py simplifications.txt 200 system_summaries >summary_200.txt
 python2.7 SumBasic.py simplifications.txt 500 system_summaries >summary_500.txt
 
 # Task 6
-/NLP_TOOLS/summarizers/rouge/latest/ROUGE-1.5.5.pl -e /NLP_TOOLS/summarizers/rouge/latest/data -f A -a -x -m -2 4 -u settings.xml >evaluation.out
+/NLP_TOOLS/summarizers/rouge/latest/ROUGE-1.5.5.pl -e /NLP_TOOLS/summarizers/rouge/latest/data -f A -a -x -m -2 4 -s -u settings.xml >evaluation.out
 
 # Task 7
-python2.7 twitter_simplify.py parses.txt twitter_simplifications.txt
-python2.7 SumBasic_tweet.py twitter_simplifications.txt 140 >tweet.txt
+#python2.7 twitter_simplify.py parses.txt twitter_simplifications.txt
+#python2.7 SumBasic_tweet.py twitter_simplifications.txt 140 >tweet.txt
