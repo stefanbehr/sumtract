@@ -197,6 +197,7 @@ def main():
     args = argparse.ArgumentParser()
     args.add_argument('sentences', help='file of line-separated sentences to summarize')
     args.add_argument('N', help='number of words in summary', type=int)
+    args.add_argument('directory', help='path to directory for html file')
     args.parse_args()
     
     N = int(sys.argv[2])
@@ -209,7 +210,7 @@ def main():
     summary = summarize(distribution, clean_sentences, processed_sentences, N)
     print summary
     html =  convert_to_html(summary, N)
-    open('summary_' + str(N) + '.html', 'w').write(html)
+    open(sys.argv[3] + '/summary_' + str(N) + '.html', 'w').write(html)
 
 if __name__=='__main__':
     main()
