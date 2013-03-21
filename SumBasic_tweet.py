@@ -160,7 +160,7 @@ def twitterize(sentence):
     sentence = re.sub(r'[Ww]ere|[Ww]e\'re', r'wr', sentence)
     sentence = re.sub(r'\b[Tt]o\b|[Tt]oo', r'2', sentence)
     sentence = re.sub(r'[Bb]e', r'B', sentence)
-    sentence = re.sub(r'\b[Ww]ith\b', r'\bw\b', sentence)
+    sentence = re.sub(r'\b[Ww]ith\b', r' w ', sentence)
     sentence = re.sub(r'[Ww]ithout', r'w/o', sentence)
     sentence = re.sub(r'[Aa]t', r'@', sentence)
     sentence = re.sub(r'\b[Aa]re\b|\b[Oo]ur\b', r'R', sentence)

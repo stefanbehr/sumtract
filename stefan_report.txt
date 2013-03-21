@@ -38,22 +38,20 @@ While not implemented here, one way to filter these out would be to run the simp
 
 % Describe the tree patterns that you used to identify each of the candidates for deletion in parses:
 
-Our approach to detecting nonrestrictive relative clauses requires any tree node to meet the following criteria in order to be classified as rooting such a clause and subsequently removed: The node must be labeled as an SBAR
+Our approach to detecting nonrestrictive relative clauses requires any tree node to meet the following criteria in order to be classified as rooting such a clause and subsequently removed: The node must be labeled as an SBAR, its first child must be labeled as a WHNP, and the first child of the WHNP node must be labeled as either a WP or a WP\$.\\
 
 % INTRASENTENTIAL ATTRIBUTIONS
 
 % Describe the tree patterns that you used to identify each of the candidates for deletion in parses:
 
-% Explain how you matched each tree against those patterns:
+\subsubsection*{Intra-Sentential Attributions}
 
-% Explain how you modified your trees to remove them:
+As alluded to above, detecting intra-sentential attributions, and subsequently modifying the appropriate parts of parse trees which contained them, was a more complex affair than the detection of any of the other clause types. This complexity arose from the fact that, upon detecting a node which rooted a sentential attribution clause, we could not simply delete the entire subtree at that node as we could with the other clause types. Instead, we had to select an appropriate subtree from within the subtree rooted at the detected node, and raise that nested subtree up to the position of the detected node.\\
 
-
+In order to achieve this, we first determined whether or not a candidate node met the following criteria: The node must be labeled as an S node, it must have one or more descendants which are simultaneously verbs, whose leaves are in a word list of attributive verbs (e.g., (VBD \textit{said})), and which may not have an S node ancestor intervening between themselves and the candidate node. Additionally, each of these required descendant verbs must have a sister node to its right which is either an S, or an SBAR. If the sister of the descendant verb is an SBAR, its first child must be an S, or, if not an S, then an (IN \textit{that}) node whose right adjacent sister is an S. If a candidate node meets all of these criteria, then it is considered to contain an intra-sentential attribution. Furthermore, the S nodes found as either siblings of attributive verbs, or the S nodes found as the first or second child of SBAR siblings of attributive verbs, are the nodes which must be raised to the position of the original candidate node in order to delete attributions while retaining the clauses being attributed. Therefore, these S nodes are the nodes which are returned from the function which detects intra-sentential attributions. The handling of these S nodes is described above.\\
 
 % LEAD ADV AND CONJ
 
-% Describe the tree patterns that you used to identify each of the candidates for deletion in parses:
+\subsubsection*{Lead Adverbials and Conjunctions}
 
-% Explain how you matched each tree against those patterns:
-
-% Explain how you modified your trees to remove them:
+Our approach to detecting lead adverbials and conjunctions is quite simple. According to our criteria, any node which was labeled as RB, ADVP, or CC, and which was the first child of an S node, was classified as a lead adverbial or conjunction, and could therefore be deleted.\\

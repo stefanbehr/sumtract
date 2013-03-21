@@ -344,8 +344,10 @@ if __name__ == "__main__":
 						parent_index = abs_node_index[:-1]		# absolute node index is tuple of len > 0, index of parent is tuple of all but last element
 						child_index = abs_node_index[-1]
 						simplified = nltk.Tree.convert(tree)	# get unfrozen copy of tree for mutation
-						simplified[parent_index].pop(child_index)	# pop index must be int, so we pop correct child of parent instead of child directly
+						popped = simplified[parent_index].pop(child_index)	# pop index must be int, so we pop correct child of parent instead of child directly
 						candidates.put(simplified.freeze())
+						if clause_type == "gerundive":
+							candidates.put(popped.freeze())
 
 	# set of items enqueued onto SetQueue, consists 
 	# only of original parses and simplifications
