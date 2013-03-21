@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 """
 Kathryn Nichols
+Stefan Behr
 LING 571
 Project 2
 
@@ -159,6 +160,9 @@ def twitterize(sentence):
     sentence = re.sub(r'[Ww]ere|[Ww]e\'re', r'wr', sentence)
     sentence = re.sub(r'\b[Tt]o\b|[Tt]oo', r'2', sentence)
     sentence = re.sub(r'[Bb]e', r'B', sentence)
+    sentence = re.sub(r'\b[Ww]ith\b', r'\bwb', sentence)
+    sentence = re.sub(r'[Ww]ithout', r'w/o', sentence)
+    sentence = re.sub(r'[Aa]t', r'@', sentence)
     sentence = re.sub(r'\b[Aa]re\b|\b[Oo]ur\b', r'R', sentence)
     sentence = re.sub(r'[Gg]reat', r'gr8', sentence)
     sentence = re.sub(r'[Tt]hey\'re|[Tt]heir|[Tt]here', r'thr', sentence)
@@ -169,7 +173,8 @@ def twitterize(sentence):
     sentence = re.sub(r'[Ll]ike', r'lk', sentence)
     sentence = re.sub(r'[Tt]hanks', r'thx', sentence)
     sentence = re.sub(r'[Pp]lease', r'pls', sentence)
-    sentence = re.sub(r'\bin\b|\band\b', r'n', sentence)
+    sentence = re.sub(r'\bin\b', r'n', sentence)
+    sentence = re.sub(r'and', r'&', sentence)
     sentence = re.sub(r'[Dd]ollar|[Dd]ollars', r'$', sentence)
     sentence = re.sub(r'[Pp]ercent|[Pp]ercentage', r'%', sentence)
     sentence = re.sub(r'er ', r'r ', sentence)

@@ -1,0 +1,3 @@
+(S (NP (Det the) (Nom (N cat))) (VP (VP (V ate) (NP (Det the) (N mouse))) (PP (P on) (NP (Det the) (N doorstep)))))
+(FOO bar)
+(S (NP FOO))

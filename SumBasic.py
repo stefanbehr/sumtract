@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 """
 Kathryn Nichols
+Stefan Behr
 LING 571
 Project 2
 
@@ -133,16 +134,26 @@ def clean(sentence):
 
     """
 
-    punc = re.compile(r' +(;|:|\?|!|\.|,|%|\'\')')
+    multiple = (r'(;|:|\?|!|,|\.|--)+ *(;|:|\?|!|,|\.|--)')
+    move_punc = re.compile(r' +(;|:|\?|!|\.|,|%)')
+    beginning_punc = re.compile(r'^( *(;|:|\?|!|\.|,|--))+')
+    comma_quote = re.compile(r'(, *(``|\'\'))|((``|\'\') *,)')
+    quotes = re.compile(r'\'\'|``')
     clitics = re.compile(r' +(\'s|\'re|n\'t|\'ve|\'m|\'ll|\'d)')
 
+
+    sentence = re.sub(comma_quote, r' ', sentence) # remove commas around q.m. and q.m.
+    sentence = re.sub(quotes, ' ', sentence)       # remove all quotation marks
+    sentence = re.sub(beginning_punc, r' ', sentence) # remove punc at beginning of line
+    sentence = re.sub(multiple, r' ', sentence)    # remove multiple punc
+    sentence = re.sub(multiple_punc, r'\2', sentence) # remove multiple punctuation
+    sentence = re.sub(move_punc, r'\1', sentence)     # attach punc to previous word
+
+    sentence = re.sub(r'\\/', '/', sentence)       # slash attaches to left and right words
+    sentence = re.sub(r'\$ +', '$', sentence)      # attach $ to next word
+    sentence = re.sub(clitics, r'\1', sentence)    # attach clitics to previous word
+    sentence = re.sub(r' +', r' ', sentence)       # delete extra spaces
     sentence = sentence.strip()
-    sentence = re.sub(punc, r'\1', sentence)     # attach punc to previous word
-    sentence = re.sub(r'\\/', '/', sentence)     # slash attaches to left and right words
-    sentence = re.sub(r'\$ +', '$', sentence)    # attach $ to next word
-    sentence = re.sub(r'`+|\'\'', '', sentence)  # remove quotes
-    sentence = re.sub(clitics, r'\1', sentence)  # attach clitics to previous word
-    sentence = re.sub(r' +', r' ', sentence)     # delete extra spaces
 
     return sentence
 
