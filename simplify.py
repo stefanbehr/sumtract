@@ -220,14 +220,29 @@ def detector_generator(clause_type):
 			except:
 				pass
 		elif clause_type == "nonrestrictive_relative":
-			pass
-		elif clause_type == "intrasentential_attribution":
-			# read in list of attribution words
-			attribution_words = WordList("attribution.txt")
+			# delete SBAR nodes whose first child is a WHNP 
+			# whose first child is a WP or WP$
 			try:
-				detected = node in tree.leaves() and node in attribution_words
-			except:
+				node_label = node.node
+			except AttributeError:
 				pass
+			else:
+				if node_label == "SBAR":
+					try:
+						first_child = node[0]
+						first_child_label = first_child.node
+					except (AttributeError, IndexError, TypeError) as e:
+						pass
+					else:
+						if first_child_label == "WHNP":
+							try:
+								first_child_child = first_child[0]
+								first_child_child_label = first_child_child.node
+							except (AttributeError, IndexError, TypeError) as e:
+								pass
+							else:
+								detected = (first_child_child_label == "WP" or 
+									first_child_child_label == "WP$")
 		return detected
 	return detector
 
