@@ -1,0 +1,59 @@
+\subsection*{The General Algorithm}
+
+The algorithm for generating sentence simplifications proceeds as follows: We begin by reading in a file of one-line parse trees in parenthesized format, converting each such parse tree into an nltk.Tree object for future traversal and manipulation. We initialize a queue and enqueue all of the original parses that we just read in. Next, we start a loop which runs until the queue is empty. During each iteration of the loop, we dequeue a tree and proceed to iterate over all of its nodes, except its root node. For each node, we iterate over each different clause type, applying each clause detection function in turn to the current node under consideration. If a clause detection function applied to a node detects the clause which it is designed to detect (returns True), then we create a deep copy of the entire tree, delete from it the node which was detected as a particular type of clause (and only that node), and enqueue the resulting, simplified tree in order to allow it to be processed again later, in case it has remaining clauses that could be removed.\\
+
+Note that, in order to reduce running time and to avoid generating duplicate simplifications, our queue has a set data structure attached to it, which acts as a queue history. Each time an item is to be placed in the queue, the attached set is checked to see whether or not that item has been placed on the queue before. If the item has already been present in the queue at any time, it will be present in the attached set, and it cannot be enqueued again. Otherwise, the item is enqueued and also added to the set to prevent future re-enqueuing of the same item. After the queue is exhausted at the termination of the main simplification loop, the set attached to it conveniently holds one copy of every single item that was ever placed on the queue, which is equivalent to the union of the set of original parses added for simplification with the set of all generated simplifications. Therefore, we use the queue history to output all the simplified sentences we ended up generating.\\
+
+An important thing to note is that intra-sentential attributions are handled differently from every other clause type. When detecting intra-sentential attributions and subsequently modifying the trees that contain them, we cannot simply delete a single node in order to remove the clause. Instead, given a node in a tree, if we determine that that particular node is the root of an intra-sentential attribution clause, we must find an appropriate descendant node which must then be raised to take the place of the node rooting the clause. One example of this is would be (S (NP \textit{He}) (VP (V \textit{said}) (SBAR (IN \textit{that}) (S (NP (Det \textit{the}) (Nom (N \textit{cat}))) (VP (V \textit{ran})))))), which would become (S (NP (Det \textit{the}) (Nom (N \textit{cat}))) (VP (V \textit{ran}))).
+
+\subsection*{Clause Detection}
+
+\subsubsection*{Noun Appositives}
+% NOUN APPOSITIVES
+
+% Describe the tree patterns that you used to identify each of the candidates for deletion in parses:
+
+According to our approach, in order for a node in a tree to be classified as rooting a noun appositive, it is required to meet all of the following criteria simultaneously: It must be labeled as an NP, it must have a sister node directly to its right that is labeled as a comma, it must have a sister node directly to its left which is also a comma, and it must have an NP sister node directly to the left of that left comma node. Any node matching those criteria, such as the NP node containing \textit{the treasurer} in the following example, would be deleted from the tree that contained it: (... (NP \textit{Robert}) (, ,) (NP (Det \textit{the}) (Nom \textit{treasurer})) (, ,) ...). After deleting such NP nodes, we did not delete the remaining excess comma nodes, since punctuation cleanup was performed further down the pipeline.\\
+
+A by-product of our sentence-matching criteria for noun appositives is that we inadvertently remove some items in lists of NPs. However, we do not think this is a problem, as SumBasic is specifically designed to prefer sentences that have the most pertinent information and ignore those that are redundant. Thus, given multiple versions of a list, SumBasic should choose the one that has the most relevant items.\\
+
+% GERUNDIVE CLAUSES
+% ****catch ungrammatical ones with parser?
+
+% Describe the tree patterns that you used to identify each of the candidates for deletion in parses:
+
+\subsubsection*{Gerundive Clauses}
+
+Our approach to detecting gerundive clauses requires any tree node to meet the following criteria in order to be classified as rooting a gerundive clause, and subsequently removed: The node must be labeled as a VP, it must be the leftmost child of its parent, its parent must be labeled as an S, and it must have, somewhere along its leftmost path of descendants, a descendant which is labeled as a VBG. The reason for this last criterion is that that we noticed in the parse data that there was often a variable number of descendant nodes intervening between a candidate VP node and a descendant VBG, and that the descendant VBG had to be on the leftmost path of the VP's descendants.\\
+
+Some collateral damage from this simplification method is that gerunds inside of PPs and other constituent types are also removed. This means that we end up with ungrammatical sentences like \ref{economy} below:
+\begin{enumerate}[label=\arabic*),ref=(\arabic*)]
+\item \label{economy} We can improve our economy by. 
+\end{enumerate}
+While not implemented here, one way to filter these out would be to run the simplified sentences through the Stanford Parser again. Sentences like the one above would be unparsable, and fail to appear in the output.
+
+% NONRESTRICTIVE REL CLAUSES
+
+\subsubsection*{Nonrestrictive Relative Clauses}
+
+% Describe the tree patterns that you used to identify each of the candidates for deletion in parses:
+
+Our approach to detecting nonrestrictive relative clauses requires any tree node to meet the following criteria in order to be classified as rooting such a clause and subsequently removed: The node must be labeled as an SBAR
+
+% INTRASENTENTIAL ATTRIBUTIONS
+
+% Describe the tree patterns that you used to identify each of the candidates for deletion in parses:
+
+% Explain how you matched each tree against those patterns:
+
+% Explain how you modified your trees to remove them:
+
+
+
+% LEAD ADV AND CONJ
+
+% Describe the tree patterns that you used to identify each of the candidates for deletion in parses:
+
+% Explain how you matched each tree against those patterns:
+
+% Explain how you modified your trees to remove them:
