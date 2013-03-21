@@ -141,7 +141,6 @@ def clean(sentence):
     quotes = re.compile(r'\'\'|``')
     clitics = re.compile(r' +(\'s|\'re|n\'t|\'ve|\'m|\'ll|\'d)')
 
-
     sentence = re.sub(comma_quote, r' ', sentence) # remove commas around q.m. and q.m.
     sentence = re.sub(quotes, ' ', sentence)       # remove all quotation marks
     sentence = re.sub(beginning_punc, r' ', sentence) # remove punc at beginning of line
@@ -152,7 +151,10 @@ def clean(sentence):
     sentence = re.sub(r'\$ +', '$', sentence)      # attach $ to next word
     sentence = re.sub(clitics, r'\1', sentence)    # attach clitics to previous word
     sentence = re.sub(r' +', r' ', sentence)       # delete extra spaces
+    sentence = re.sub(r' -- -', r' --', sentence)  # difficult pattern
     sentence = sentence.strip()
+    sentence = sentence.capitalize()
+    if not sentence.endswith('.'): sentence += '.'
 
     return sentence
 
