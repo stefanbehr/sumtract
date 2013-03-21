@@ -1,10 +1,10 @@
 <ROUGE_EVAL version='1.5.5'>
 <EVAL ID='1'>
-<MODEL-ROOT> directory_to_human_summaries </MODEL-ROOT>
-<PEER-ROOT> directory_to_system_summary </PEER-ROOT>
+<MODEL-ROOT> ./human_summaries </MODEL-ROOT>
+<PEER-ROOT> ./system_summaries </PEER-ROOT>
 <INPUT-FORMAT TYPE='SEE'> </INPUT-FORMAT>
 <PEERS>
-<P ID='1'>our_summary.html</P>
+<P ID='1'>summary_500.html</P>
 </PEERS>
 <MODELS>
 <M ID='al'>aljazeera.com.html</M>
